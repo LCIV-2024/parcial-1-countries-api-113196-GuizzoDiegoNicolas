@@ -1,5 +1,6 @@
 package ar.edu.utn.frc.tup.lciii.service;
 
+import ar.edu.utn.frc.tup.lciii.dtos.common.CountryDTO;
 import ar.edu.utn.frc.tup.lciii.model.Country;
 import ar.edu.utn.frc.tup.lciii.repository.CountryRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,23 @@ public class CountryService {
                 return response.stream().map(this::mapToCountry).collect(Collectors.toList());
         }
 
+        public List<Country> getCountryByCodeName(String code, String name) {
+                String url = "https://restcountries.com/v3.1/all";
+                List<Map<String, Object>> response = restTemplate.getForObject(url, List.class);
+                return response.stream().map(this::mapToCountry).collect(Collectors.toList());
+        }
+
+        public List<Country> getCountriesByContinent(String continent) {
+                return getAllCountries().stream()
+                        .filter(c -> c.getRegion().equalsIgnoreCase(continent))
+                        .collect(Collectors.toList());
+        }
         /**
          * Agregar mapeo de campo cca3 (String)
-         * Agregar mapeo campos borders ((List<String>))
+         */
+
+        /*
+        * Agregar mapeo campos borders ((List<String>))
          */
         private Country mapToCountry(Map<String, Object> countryData) {
                 Map<String, Object> nameData = (Map<String, Object>) countryData.get("name");
